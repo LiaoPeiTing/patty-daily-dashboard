@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patty 每日儀表板</title>
+<style>
+  :root {
+    --bg: #0C1117; --surface: #151d28; --border: #1e2a38;
+    --text: #e8e3d8; --dim: #7a8698; --gold: #D4A054;
+    --font: "PingFang TC", "Microsoft JhengHei", -apple-system, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font-family: var(--font); min-height: 100dvh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+  h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 6px; }
+  .sub { color: var(--dim); font-size: .88rem; margin-bottom: 32px; }
+  .cards { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+  a.card { display: flex; flex-direction: column; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 24px; width: 260px; text-decoration: none; color: var(--text); transition: border-color .2s, transform .15s; }
+  a.card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .card .icon { font-size: 2rem; }
+  .card .title { font-size: 1.05rem; font-weight: 600; color: var(--gold); }
+  .card .desc { font-size: .82rem; color: var(--dim); line-height: 1.5; }
+  footer { margin-top: 40px; font-size: .75rem; color: var(--dim); }
+</style>
+</head>
+<body>
+  <h1>📊 Patty 每日儀表板</h1>
+  <p class="sub">每天自動更新，手機打開就能看</p>
+  <div class="cards">
+    <a class="card" href="macro-dashboard.html">
+      <span class="icon">🌍</span>
+      <span class="title">每日數據儀表板</span>
+      <span class="desc">台股市場、風險情緒、融資融券、油價、利率通膨、匯率——15 項指標一頁看完</span>
+    </a>
+  </div>
+  <footer>自動部署於 GitHub Pages · 資料來源見各頁內標註</footer>
+</body>
+</html>

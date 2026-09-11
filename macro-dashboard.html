@@ -1,0 +1,698 @@
+<title>每日數據儀表板</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root {
+  --bg: #0C1117;
+  --surface: #151D27;
+  --surface-hover: #1C2735;
+  --border: #243040;
+  --border-accent: #D4A05433;
+  --text: #D4DBE5;
+  --text-muted: #7889A0;
+  --text-dim: #4A5568;
+  --accent: #D4A054;
+  --accent-dim: #D4A05422;
+  --up: #34D399;
+  --up-bg: #34D39912;
+  --down: #F87171;
+  --down-bg: #F8717112;
+  --flat: #94A3B8;
+  --alert: #F59E0B;
+  --alert-bg: #F59E0B15;
+  --fear: #F87171;
+  --greed: #34D399;
+  --neutral-zone: #94A3B8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dashboard {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 24px 48px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.header h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.header h1 span {
+  color: var(--accent);
+}
+
+.header-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.status-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--up);
+  margin-right: 5px;
+  box-shadow: 0 0 6px var(--up);
+}
+
+.subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 10px;
+  margin-bottom: 28px;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+/* Section Card */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 18px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-tag {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: var(--accent-dim);
+  padding: 3px 8px;
+  border-radius: 3px;
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.card-body {
+  padding: 6px 0;
+}
+
+/* Indicator Row */
+.indicator {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  transition: background 0.15s;
+}
+
+.indicator:hover {
+  background: var(--surface-hover);
+}
+
+.indicator + .indicator {
+  border-top: 1px solid var(--border);
+}
+
+.ind-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.ind-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ind-value.large {
+  font-size: 20px;
+}
+
+.ind-change {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  text-align: right;
+  min-width: 80px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ind-change.up { color: var(--up); }
+.ind-change.down { color: var(--down); }
+.ind-change.flat { color: var(--flat); }
+
+/* Detail text under value */
+.ind-detail {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  margin-top: 2px;
+}
+
+/* Three-way row for rates */
+.rate-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  padding: 0;
+}
+
+.rate-cell {
+  text-align: center;
+  padding: 14px 12px;
+  border-right: 1px solid var(--border);
+}
+
+.rate-cell:last-child { border-right: none; }
+
+.rate-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.rate-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.rate-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* Inflation expectations */
+.inflation-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.inflation-cell {
+  padding: 12px 16px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.inflation-cell:last-child { border-right: none; }
+
+.inflation-label {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.inflation-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.inflation-formula {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+
+/* Fear & Greed gauge */
+.gauge-container {
+  padding: 6px 18px 14px;
+}
+
+.gauge-bar {
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(to right, var(--fear), var(--alert), var(--greed));
+  position: relative;
+  margin-top: 4px;
+  margin-bottom: 6px;
+}
+
+.gauge-marker {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 14px;
+  background: var(--text);
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  transform: translateX(-50%);
+}
+
+.gauge-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.gauge-zone {
+  font-size: 11px;
+  font-weight: 600;
+  text-align: center;
+  margin-top: 2px;
+}
+
+/* Institution breakdown */
+.inst-breakdown {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.inst-item {
+  flex: 1;
+  padding: 10px 12px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.inst-item:last-child { border-right: none; }
+
+.inst-name {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.inst-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.inst-val.pos { color: var(--up); }
+.inst-val.neg { color: var(--down); }
+
+/* Currency row */
+.fx-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+
+.fx-cell {
+  padding: 14px 16px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.fx-cell:last-child { border-right: none; }
+
+.fx-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.fx-value {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.fx-source {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+/* Alert section */
+.alert-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px 20px;
+  margin-top: 4px;
+}
+
+.alert-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.alert-icon {
+  font-size: 14px;
+}
+
+.alert-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--alert);
+  letter-spacing: 0.3px;
+}
+
+.alert-body {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.alert-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+}
+
+.alert-item + .alert-item {
+  border-top: 1px solid var(--border);
+}
+
+.alert-bullet {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--alert);
+  margin-top: 7px;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.footer {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* Full-width card */
+.card.full {
+  grid-column: 1 / -1;
+}
+
+/* Margin note */
+.margin-note {
+  font-size: 11px;
+  color: var(--text-dim);
+  padding: 8px 18px 12px;
+  border-top: 1px solid var(--border);
+  font-style: italic;
+}
+
+@media (max-width: 700px) {
+  .grid { grid-template-columns: 1fr; }
+  .rate-row, .fx-row { grid-template-columns: 1fr; }
+  .rate-cell, .fx-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .rate-cell:last-child, .fx-cell:last-child { border-bottom: none; }
+  .inst-breakdown { flex-direction: column; }
+  .inst-item { border-right: none; border-bottom: 1px solid var(--border); }
+  .inst-item:last-child { border-bottom: none; }
+  .header h1 { font-size: 22px; }
+  .inflation-row { grid-template-columns: 1fr; }
+  .inflation-cell { border-right: none; border-bottom: 1px solid var(--border); }
+  .inflation-cell:last-child { border-bottom: none; }
+}
+</style>
+
+<div class="dashboard">
+  <!-- Header -->
+  <div class="header">
+    <h1>每日數據<span>｜</span>2026-09-11</h1>
+    <div class="header-meta">
+      <span><span class="status-dot"></span>15/15 指標</span>
+      <span>排程自動抓取</span>
+    </div>
+  </div>
+  <p class="subtitle">台股市場 · 風險情緒 · 融資融券 · 油價 · 利率與通膨 · 匯率</p>
+
+  <!-- Main Grid -->
+  <div class="grid">
+
+    <!-- 台股市場 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="section-tag">一</span>
+        <span class="card-title">台股市場</span>
+      </div>
+      <div class="card-body">
+        <div class="indicator">
+          <span class="ind-label">加權指數</span>
+          <span class="ind-value large">46,940</span>
+          <span class="ind-change down">▼ −242.87</span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">成交金額</span>
+          <span class="ind-value">7,507<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-change flat"></span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">三大法人合計</span>
+          <span class="ind-value" style="color:var(--down)">−487.5<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-change down">賣超</span>
+        </div>
+      </div>
+      <div class="inst-breakdown">
+        <div class="inst-item">
+          <div class="inst-name">外資</div>
+          <div class="inst-val neg">−383.3</div>
+        </div>
+        <div class="inst-item">
+          <div class="inst-name">投信</div>
+          <div class="inst-val pos">+33.5</div>
+        </div>
+        <div class="inst-item">
+          <div class="inst-name">自營商</div>
+          <div class="inst-val neg">−137.6</div>
+        </div>
+      </div>
+      <div class="margin-note">資料日期 09/10｜來源：證交所</div>
+    </div>
+
+    <!-- 風險情緒 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="section-tag">二</span>
+        <span class="card-title">風險情緒</span>
+      </div>
+      <div class="card-body">
+        <div class="indicator">
+          <span class="ind-label">VIX 恐慌指數</span>
+          <span class="ind-value large">17.84</span>
+          <span class="ind-change up">▲ +1.38</span>
+        </div>
+        <div class="indicator" style="border-top: 1px solid var(--border);">
+          <span class="ind-label">CNN 恐貪指數</span>
+          <span class="ind-value large" style="color:var(--fear)">33.26</span>
+          <span class="ind-change down">▼ −4.94</span>
+        </div>
+      </div>
+      <div class="gauge-container">
+        <div class="gauge-bar">
+          <div class="gauge-marker" style="left: 33.26%"></div>
+        </div>
+        <div class="gauge-labels">
+          <span>0 極度恐懼</span>
+          <span>50 中性</span>
+          <span>100 極度貪婪</span>
+        </div>
+        <div class="gauge-zone" style="color:var(--fear)">恐懼</div>
+      </div>
+      <div class="margin-note">資料日期 09/10｜前值 VIX 16.46、CNN 38.20｜來源：M平方</div>
+    </div>
+
+    <!-- 融資融券 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="section-tag">三</span>
+        <span class="card-title">融資融券</span>
+      </div>
+      <div class="card-body">
+        <div class="indicator">
+          <span class="ind-label">融資維持率</span>
+          <span class="ind-value large">189.27<span style="font-size:14px">%</span></span>
+          <span class="ind-change flat">➡️ 穩定</span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">融資餘額</span>
+          <span class="ind-value">5,919<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-change flat"></span>
+        </div>
+      </div>
+      <div class="margin-note">資料日期 09/09（T+1 延遲）｜來源：玩股網/TWSE</div>
+    </div>
+
+    <!-- 油價 -->
+    <div class="card">
+      <div class="card-header">
+        <span class="section-tag">四</span>
+        <span class="card-title">油價</span>
+      </div>
+      <div class="card-body">
+        <div class="indicator">
+          <span class="ind-label">布蘭特原油</span>
+          <span class="ind-value large">107.96</span>
+          <span class="ind-change down">▼ −0.39%</span>
+        </div>
+        <div class="indicator">
+          <span class="ind-label">WTI 原油</span>
+          <span class="ind-value large">102.41</span>
+          <span class="ind-change down">▼ −0.71%</span>
+        </div>
+      </div>
+      <div class="margin-note">單位 USD/桶｜延遲 15 分鐘報價｜來源：玩股網</div>
+    </div>
+
+    <!-- 利率與通膨 -->
+    <div class="card full">
+      <div class="card-header">
+        <span class="section-tag">五</span>
+        <span class="card-title">利率與通膨</span>
+      </div>
+      <div class="rate-row">
+        <div class="rate-cell">
+          <div class="rate-label">2 年期殖利率</div>
+          <div class="rate-value">4.56<span style="font-size:14px">%</span></div>
+        </div>
+        <div class="rate-cell">
+          <div class="rate-label">10 年期殖利率</div>
+          <div class="rate-value">4.95<span style="font-size:14px">%</span></div>
+        </div>
+        <div class="rate-cell">
+          <div class="rate-label">30 年期殖利率</div>
+          <div class="rate-value">5.37<span style="font-size:14px">%</span></div>
+        </div>
+      </div>
+      <div class="inflation-row">
+        <div class="inflation-cell">
+          <div class="inflation-label">10 年通膨預期</div>
+          <div class="inflation-value">2.40%</div>
+          <div class="inflation-formula">4.95% − 2.55% TIPS</div>
+        </div>
+        <div class="inflation-cell">
+          <div class="inflation-label">30 年通膨預期</div>
+          <div class="inflation-value">2.32%</div>
+          <div class="inflation-formula">5.37% − 3.05% TIPS</div>
+        </div>
+      </div>
+      <div class="margin-note">資料日期 09/10｜來源：美國財政部</div>
+    </div>
+
+    <!-- 匯率 -->
+    <div class="card full">
+      <div class="card-header">
+        <span class="section-tag">六</span>
+        <span class="card-title">匯率</span>
+      </div>
+      <div class="fx-row">
+        <div class="fx-cell">
+          <div class="fx-label">美元指數 DXY</div>
+          <div class="fx-value">99.16</div>
+          <div class="fx-source">MarketWatch</div>
+        </div>
+        <div class="fx-cell">
+          <div class="fx-label">美元／日圓</div>
+          <div class="fx-value">154.33</div>
+          <div class="fx-source">玩股網</div>
+        </div>
+        <div class="fx-cell">
+          <div class="fx-label">美元／台幣</div>
+          <div class="fx-value">31.665</div>
+          <div class="fx-source">鉅亨網</div>
+        </div>
+      </div>
+      <div class="margin-note">油價與匯率為 09/11 凌晨延遲報價</div>
+    </div>
+
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert-section">
+    <div class="alert-header">
+      <span class="alert-icon">⚠</span>
+      <span class="alert-title">顯著變化提醒</span>
+    </div>
+    <div class="alert-body">
+      <div class="alert-item">
+        <span class="alert-bullet"></span>
+        <span><strong style="color:var(--text)">VIX +1.38</strong>（16.46 → 17.84）— 恐慌指數單日上升，但未達門檻（±2 點）</span>
+      </div>
+      <div class="alert-item">
+        <span class="alert-bullet"></span>
+        <span><strong style="color:var(--text)">CNN 恐貪 −4.94</strong>（38.20 → 33.26）— 維持在「恐懼」區間（25-45），未跨區</span>
+      </div>
+      <div class="alert-item">
+        <span class="alert-bullet"></span>
+        <span><strong style="color:var(--text)">外資賣超 383.3 億</strong> — 三大法人合計賣超 487.5 億，留意大盤壓力</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <span>資料來源：證交所、M平方、玩股網、美國財政部、MarketWatch、鉅亨網</span>
+    <span>本儀表板僅供參考，不構成任何投資建議</span>
+  </div>
+</div>
