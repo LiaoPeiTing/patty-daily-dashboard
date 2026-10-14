@@ -480,13 +480,13 @@ body {
 <div class="dashboard">
   <!-- Header -->
   <div class="header">
-    <h1>每日數據<span>｜</span>2026-10-13</h1>
+    <h1>每日數據<span>｜</span>2026-10-14</h1>
     <div class="header-meta">
       <span><span class="status-dot"></span>15/15 指標</span>
       <span>排程自動抓取</span>
     </div>
   </div>
-  <p class="subtitle">台股市場 · 風險情緒 · 融資融券 · 油價 · 利率與通膨 · 匯率　｜　週二下午抓取；台股為 10/13 收盤；融資為 10/12；VIX 為 10/12；美債為 10/09（10/12 美國休市）；油價、日圓、DXY 為 10/13 凌晨報價；台幣為 10/13 台北盤</p>
+  <p class="subtitle">台股市場 · 風險情緒 · 融資融券 · 油價 · 利率與通膨 · 匯率　｜　週三上午 09:45 抓取（台股盤中）；台股、融資、VIX、CNN、美債皆為 10/13 資料；油價、日圓、台幣為 10/14 上午延遲報價；DXY 為 10/14 08:59 報價</p>
 
   <!-- Main Grid -->
   <div class="grid">
@@ -505,30 +505,30 @@ body {
         </div>
         <div class="indicator">
           <span class="ind-label">成交金額</span>
-          <span class="ind-value">11,986<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
-          <span class="ind-change up">▲ +3,041</span>
+          <span class="ind-value">12,019<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-change up">▲ +3,074</span>
         </div>
         <div class="indicator">
           <span class="ind-label">三大法人合計</span>
-          <span class="ind-value" style="color:var(--down)">−1,984.5<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-value" style="color:var(--down)">−1,976.4<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
           <span class="ind-change down">賣超</span>
         </div>
       </div>
       <div class="inst-breakdown">
         <div class="inst-item">
           <div class="inst-name">外資</div>
-          <div class="inst-val neg">−1,653.4</div>
+          <div class="inst-val neg">−1,652.9</div>
         </div>
         <div class="inst-item">
           <div class="inst-name">投信</div>
-          <div class="inst-val pos">+238.7</div>
+          <div class="inst-val pos">+246.3</div>
         </div>
         <div class="inst-item">
           <div class="inst-name">自營商</div>
           <div class="inst-val neg">−569.8</div>
         </div>
       </div>
-      <div class="margin-note">資料日期 10/13（週二，加權指數 −1.95%）；成交金額較 10/12（8,945 億）增加｜來源：證交所</div>
+      <div class="margin-note">資料日期 10/13（週二收盤，加權指數 −1.95%；10/14 盤中未收盤）；成交金額較 10/12（8,945 億）增加｜來源：證交所</div>
     </div>
 
     <!-- 風險情緒 -->
@@ -540,27 +540,27 @@ body {
       <div class="card-body">
         <div class="indicator">
           <span class="ind-label">VIX 恐慌指數</span>
-          <span class="ind-value large">15.21</span>
-          <span class="ind-change up">▲ +0.37</span>
+          <span class="ind-value large">15.27</span>
+          <span class="ind-change up">▲ +0.06</span>
         </div>
         <div class="indicator" style="border-top: 1px solid var(--border);">
           <span class="ind-label">CNN 恐貪指數</span>
-          <span class="ind-value large" style="color:var(--neutral-zone)">45.40</span>
-          <span class="ind-change up">▲ +0.40</span>
+          <span class="ind-value large" style="color:var(--fear)">44.74</span>
+          <span class="ind-change down">▼ −1.60</span>
         </div>
       </div>
       <div class="gauge-container">
         <div class="gauge-bar">
-          <div class="gauge-marker" style="left: 45.4%"></div>
+          <div class="gauge-marker" style="left: 44.74%"></div>
         </div>
         <div class="gauge-labels">
           <span>0 極度恐懼</span>
           <span>50 中性</span>
           <span>100 極度貪婪</span>
         </div>
-        <div class="gauge-zone" style="color:var(--neutral-zone)">中性（45–55 區間，貼近下緣）</div>
+        <div class="gauge-zone" style="color:var(--fear)">恐懼（25–45 區間，貼近上緣）</div>
       </div>
-      <div class="margin-note">VIX 10/12（M平方前值 14.84）｜CNN 10/13（M平方前值 45.40；上份報告 45.00，仍在中性區）｜來源：M平方</div>
+      <div class="margin-note">VIX 10/13（前值 15.21）｜CNN 10/13（前值 46.34；上份報告 45.40，由中性跨入恐懼區）｜來源：M平方</div>
     </div>
 
     <!-- 融資融券 -->
@@ -572,16 +572,16 @@ body {
       <div class="card-body">
         <div class="indicator">
           <span class="ind-label">融資維持率</span>
-          <span class="ind-value large">196.17<span style="font-size:14px">%</span></span>
-          <span class="ind-change down">▼ −0.95pp</span>
+          <span class="ind-value large">189.94<span style="font-size:14px">%</span></span>
+          <span class="ind-change down">▼ −6.23pp</span>
         </div>
         <div class="indicator">
           <span class="ind-label">融資餘額</span>
-          <span class="ind-value">6,533<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
-          <span class="ind-change up">▲ +69.24億</span>
+          <span class="ind-value">6,450<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-change down">▼ −83.51億</span>
         </div>
       </div>
-      <div class="margin-note">資料日期 10/12（玩股網日期已依時區 +1 天換算，收盤價吻合證交所；10/13 尚未更新）｜前值 197.12%（10/08）｜來源：玩股網/TWSE</div>
+      <div class="margin-note">資料日期 10/13（玩股網日期已依時區 +1 天換算，收盤價吻合證交所）｜前值 196.17%（10/12）｜來源：玩股網/TWSE</div>
     </div>
 
     <!-- 油價 -->
@@ -593,16 +593,16 @@ body {
       <div class="card-body">
         <div class="indicator">
           <span class="ind-label">布蘭特原油</span>
-          <span class="ind-value large">105.15</span>
-          <span class="ind-change down">▼ −1.41%</span>
+          <span class="ind-value large">107.11</span>
+          <span class="ind-change up">▲ +1.34%</span>
         </div>
         <div class="indicator">
           <span class="ind-label">WTI 原油</span>
-          <span class="ind-value large">92.07</span>
-          <span class="ind-change down">▼ −1.78%</span>
+          <span class="ind-value large">95.35</span>
+          <span class="ind-change up">▲ +0.61%</span>
         </div>
       </div>
-      <div class="margin-note">單位 USD/桶｜10/13 03:50（台北）延遲報價；單日漲跌以來源昨收計（布蘭特 106.65、WTI 93.74）；較上份報告累計 +0.70%／+0.45%｜來源：玩股網</div>
+      <div class="margin-note">單位 USD/桶｜10/14 約 09:19（台北）延遲報價；單日漲跌以來源昨收計（布蘭特 105.69、WTI 94.77）；較上份報告累計 +1.86%／+3.56%｜來源：玩股網</div>
     </div>
 
     <!-- 利率與通膨 -->
@@ -614,33 +614,33 @@ body {
       <div class="rate-row">
         <div class="rate-cell">
           <div class="rate-label">2 年期殖利率</div>
-          <div class="rate-value" style="color:var(--up)">4.80<span style="font-size:14px">%</span></div>
-          <div class="rate-sub">單日 +0.05（與上次報告持平）</div>
+          <div class="rate-value" style="color:var(--down)">4.79<span style="font-size:14px">%</span></div>
+          <div class="rate-sub">較 10/09 −0.01</div>
         </div>
         <div class="rate-cell">
           <div class="rate-label">10 年期殖利率</div>
-          <div class="rate-value" style="color:var(--up)">5.24<span style="font-size:14px">%</span></div>
-          <div class="rate-sub">單日 +0.02（與上次報告持平）</div>
+          <div class="rate-value" style="color:var(--down)">5.21<span style="font-size:14px">%</span></div>
+          <div class="rate-sub">較 10/09 −0.03</div>
         </div>
         <div class="rate-cell">
           <div class="rate-label">30 年期殖利率</div>
-          <div class="rate-value" style="color:var(--flat)">5.60<span style="font-size:14px">%</span></div>
-          <div class="rate-sub">單日 0.00（與上次報告持平）</div>
+          <div class="rate-value" style="color:var(--down)">5.56<span style="font-size:14px">%</span></div>
+          <div class="rate-sub">較 10/09 −0.04</div>
         </div>
       </div>
       <div class="inflation-row">
         <div class="inflation-cell">
           <div class="inflation-label">10 年通膨預期</div>
           <div class="inflation-value">2.33%</div>
-          <div class="inflation-formula">5.24% − 2.91% TIPS</div>
+          <div class="inflation-formula">5.21% − 2.88% TIPS</div>
         </div>
         <div class="inflation-cell">
           <div class="inflation-label">30 年通膨預期</div>
           <div class="inflation-value">2.28%</div>
-          <div class="inflation-formula">5.60% − 3.32% TIPS</div>
+          <div class="inflation-formula">5.56% − 3.28% TIPS</div>
         </div>
       </div>
-      <div class="margin-note">資料日期 10/09（官方收盤；10/12 美國哥倫布日休市，財政部無新資料，與上份報告相同）｜來源：美國財政部</div>
+      <div class="margin-note">資料日期 10/13（官方收盤；上份報告為 10/09，10/12 美國哥倫布日休市）｜來源：美國財政部</div>
     </div>
 
     <!-- 匯率 -->
@@ -652,21 +652,21 @@ body {
       <div class="fx-row">
         <div class="fx-cell">
           <div class="fx-label">美元指數 DXY</div>
-          <div class="fx-value">102.32</div>
+          <div class="fx-value">102.17</div>
           <div class="fx-source">MarketWatch</div>
         </div>
         <div class="fx-cell">
           <div class="fx-label">美元／日圓</div>
-          <div class="fx-value">158.22</div>
+          <div class="fx-value">158.47</div>
           <div class="fx-source">玩股網</div>
         </div>
         <div class="fx-cell">
           <div class="fx-label">美元／台幣</div>
-          <div class="fx-value">32.085</div>
+          <div class="fx-value">32.205</div>
           <div class="fx-source">鉅亨網</div>
         </div>
       </div>
-      <div class="margin-note">DXY 10/13 4:06 a.m. EDT 延遲報價（單日 −0.26%，前收 102.59）；日圓 10/13 03:48（台北）（−0.20%）；台幣 10/13 台北盤（+0.60%，台幣貶值）</div>
+      <div class="margin-note">DXY 10/13 8:59 p.m. EDT 延遲報價（單日 −0.01%，前收 102.18）；日圓 10/14 約 09:30（台北）（+0.09%）；台幣 10/14 約 09:41（台北）（+0.37%，台幣貶值）</div>
     </div>
 
   </div>
@@ -680,15 +680,27 @@ body {
     <div class="alert-body">
       <div class="alert-item">
         <span class="alert-bullet"></span>
-        <span><strong style="color:var(--text)">加權指數 −1.95%</strong>（49,301.96 → 48,341.31，單日 −960.65 點）— 達門檻</span>
+        <span><strong style="color:var(--text)">融資維持率 −6.23pp</strong>（196.17% → 189.94%），融資餘額 −83.51 億 — 達門檻</span>
       </div>
       <div class="alert-item">
         <span class="alert-bullet"></span>
-        <span>未達門檻：融資維持率 −0.95pp、VIX +0.37（+2.5%）、CNN 仍在中性區、油價累計 +0.70%／+0.45%、10Y 0.00、DXY +0.09%、USD/JPY −0.07%、USD/TWD +0.66%</span>
+        <span><strong style="color:var(--text)">加權指數 −1.95%</strong>（10/13 單日 −960.65 點）— 達門檻（資料日期同上份報告）</span>
       </div>
       <div class="alert-item">
         <span class="alert-bullet"></span>
-        <span>近期趨勢：加權指數連3日下降；CNN 恐貪連3日回升；融資維持率連3日下降、融資餘額連3日增加；布蘭特／WTI 連3日上升；VIX 連2日下降後反轉上升</span>
+        <span><strong style="color:var(--text)">WTI 原油 +3.56%</strong>（92.07 → 95.35，較上份報告累計；來源當日 +0.61%）— 達門檻</span>
+      </div>
+      <div class="alert-item">
+        <span class="alert-bullet"></span>
+        <span><strong style="color:var(--text)">CNN 恐貪跨區間</strong>：45.40（中性）→ 44.74（恐懼）</span>
+      </div>
+      <div class="alert-item">
+        <span class="alert-bullet"></span>
+        <span>未達門檻：VIX +0.06、布蘭特累計 +1.86%、10Y −0.03pp、DXY −0.15%、USD/JPY +0.16%、USD/TWD +0.37%</span>
+      </div>
+      <div class="alert-item">
+        <span class="alert-bullet"></span>
+        <span>近期趨勢：融資維持率連3日下降；布蘭特／WTI 連3日上升；USD/TWD 連2日上升；VIX 連2日上升；CNN 連2日回升後反轉下降</span>
       </div>
     </div>
   </div>
