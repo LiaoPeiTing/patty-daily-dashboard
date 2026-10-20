@@ -1,35 +1,43 @@
 <title>每日數據儀表板</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
 <style>
 :root {
-  --bg: #0C1117;
-  --surface: #151D27;
-  --surface-hover: #1C2735;
-  --border: #243040;
-  --border-accent: #D4A05433;
-  --text: #D4DBE5;
-  --text-muted: #7889A0;
-  --text-dim: #4A5568;
-  --accent: #D4A054;
-  --accent-dim: #D4A05422;
-  --up: #34D399;
-  --up-bg: #34D39912;
-  --down: #F87171;
-  --down-bg: #F8717112;
-  --flat: #94A3B8;
-  --alert: #F59E0B;
-  --alert-bg: #F59E0B15;
-  --fear: #F87171;
-  --greed: #34D399;
-  --neutral-zone: #94A3B8;
+  --bg-page: #F5F7FA;
+  --bg-card: #FFFFFF;
+  --border: #E3E8EF;
+  --text-main: #1F2937;
+  --text-sub: #4B5563;
+  --text-note: #6B7280;
+  --accent: #2563EB;
+  --accent-bg: #EFF4FF;
+  --up: #D93025;
+  --up-bg: #FDECEA;
+  --down: #188038;
+  --down-bg: #E6F4EA;
+  --flat: #6B7280;
+  --warn-bg: #FFF8E1;
+  --warn-border: #F59E0B;
+  --warn-text: #7A4B00;
+  /* 膠囊內文字用較深的同色系，確保落在淡色底上仍達 4.5:1 */
+  --up-text: #B3261E;
+  --down-text: #0F6B2D;
+  /* 恐貪量表 */
+  --fear: #C5221F;
+  --greed: #188038;
+  --neutral-zone: #4B5563;
+  --gauge-start: #F28B82;
+  --gauge-mid: #FDD663;
+  --gauge-end: #81C995;
+  --row-hover: #F9FAFB;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-main);
+  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
   font-size: 14px;
   line-height: 1.5;
   min-height: 100vh;
@@ -58,7 +66,7 @@ body {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: 28px;
   font-weight: 700;
-  color: var(--text);
+  color: var(--text-main);
   letter-spacing: -0.5px;
 }
 
@@ -69,10 +77,11 @@ body {
 .header-meta {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 16px;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--text-sub);
 }
 
 .status-dot {
@@ -80,62 +89,68 @@ body {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--up);
+  background: var(--down);
   margin-right: 5px;
-  box-shadow: 0 0 6px var(--up);
 }
 
 .subtitle {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-sub);
+  line-height: 1.6;
   margin-top: 10px;
   margin-bottom: 28px;
+  overflow-wrap: anywhere;
 }
 
 /* Grid */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
   gap: 16px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 /* Section Card */
 .card {
-  background: var(--surface);
+  background: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 6px;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 20px;
   overflow: hidden;
+  min-width: 0;
 }
 
 .card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 18px 10px;
+  gap: 10px;
+  padding: 0 0 12px;
   border-bottom: 1px solid var(--border);
 }
 
 .section-tag {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 10px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
   letter-spacing: 1.2px;
-  text-transform: uppercase;
   color: var(--accent);
-  background: var(--accent-dim);
+  background: var(--accent-bg);
   padding: 3px 8px;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .card-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  border-left: 4px solid var(--accent);
+  padding-left: 10px;
+  line-height: 1.3;
 }
 
 .card-body {
-  padding: 6px 0;
+  padding: 4px 0;
 }
 
 /* Indicator Row */
@@ -144,12 +159,12 @@ body {
   grid-template-columns: 1fr auto auto;
   align-items: center;
   gap: 12px;
-  padding: 10px 18px;
+  padding: 12px 0;
   transition: background 0.15s;
 }
 
 .indicator:hover {
-  background: var(--surface-hover);
+  background: var(--row-hover);
 }
 
 .indicator + .indicator {
@@ -158,39 +173,49 @@ body {
 
 .ind-label {
   font-size: 13px;
-  color: var(--text-muted);
+  color: var(--text-sub);
   font-weight: 500;
 }
 
 .ind-value {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--text-main);
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
 .ind-value.large {
-  font-size: 20px;
+  font-size: 30px;
+}
+
+.ind-value span {
+  color: var(--text-sub);
 }
 
 .ind-change {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 12px;
-  text-align: right;
-  min-width: 80px;
+  font-weight: 600;
+  text-align: center;
+  justify-self: end;
+  white-space: nowrap;
+  padding: 2px 10px;
+  border-radius: 999px;
   font-variant-numeric: tabular-nums;
 }
 
-.ind-change.up { color: var(--up); }
-.ind-change.down { color: var(--down); }
-.ind-change.flat { color: var(--flat); }
+.ind-change.up { color: var(--up-text); background: var(--up-bg); }
+.ind-change.down { color: var(--down-text); background: var(--down-bg); }
+.ind-change.flat { color: var(--flat); background: transparent; padding-left: 0; padding-right: 0; }
 
 /* Detail text under value */
 .ind-detail {
-  font-size: 11px;
-  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-note);
   font-family: 'IBM Plex Mono', monospace;
   margin-top: 2px;
 }
@@ -212,24 +237,25 @@ body {
 .rate-cell:last-child { border-right: none; }
 
 .rate-label {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--text-sub);
   letter-spacing: 0.5px;
   margin-bottom: 6px;
 }
 
 .rate-value {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
   font-variant-numeric: tabular-nums;
 }
 
 .rate-sub {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 11px;
-  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-note);
   margin-top: 4px;
 }
 
@@ -250,66 +276,67 @@ body {
 .inflation-cell:last-child { border-right: none; }
 
 .inflation-label {
-  font-size: 10px;
-  color: var(--text-dim);
+  font-size: 12px;
+  color: var(--text-sub);
   letter-spacing: 0.8px;
-  text-transform: uppercase;
   margin-bottom: 4px;
 }
 
 .inflation-value {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 700;
   color: var(--accent);
   font-variant-numeric: tabular-nums;
 }
 
 .inflation-formula {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 10px;
-  color: var(--text-dim);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-note);
   margin-top: 3px;
 }
 
 /* Fear & Greed gauge */
 .gauge-container {
-  padding: 6px 18px 14px;
+  padding: 8px 0 14px;
 }
 
 .gauge-bar {
-  height: 6px;
-  border-radius: 3px;
-  background: linear-gradient(to right, var(--fear), var(--alert), var(--greed));
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(to right, var(--gauge-start), var(--gauge-mid), var(--gauge-end));
   position: relative;
-  margin-top: 4px;
-  margin-bottom: 6px;
+  margin-top: 6px;
+  margin-bottom: 8px;
 }
 
 .gauge-marker {
   position: absolute;
-  top: -4px;
-  width: 3px;
-  height: 14px;
-  background: var(--text);
-  border-radius: 1px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  top: -5px;
+  width: 4px;
+  height: 18px;
+  background: var(--text-main);
+  border: 1px solid var(--bg-card);
+  border-radius: 2px;
   transform: translateX(-50%);
 }
 
 .gauge-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 10px;
-  color: var(--text-dim);
+  gap: 4px;
+  font-size: 12px;
+  color: var(--text-main);
   font-family: 'IBM Plex Mono', monospace;
 }
 
 .gauge-zone {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
   text-align: center;
-  margin-top: 2px;
+  margin-top: 4px;
 }
 
 /* Institution breakdown */
@@ -329,16 +356,16 @@ body {
 .inst-item:last-child { border-right: none; }
 
 .inst-name {
-  font-size: 10px;
-  color: var(--text-dim);
+  font-size: 13px;
+  color: var(--text-sub);
   letter-spacing: 0.5px;
   margin-bottom: 4px;
 }
 
 .inst-val {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 16px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
@@ -361,32 +388,34 @@ body {
 .fx-cell:last-child { border-right: none; }
 
 .fx-label {
-  font-size: 11px;
-  color: var(--text-muted);
+  font-size: 13px;
+  color: var(--text-sub);
   margin-bottom: 6px;
   font-weight: 500;
 }
 
 .fx-value {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text);
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text-main);
   font-variant-numeric: tabular-nums;
 }
 
 .fx-source {
-  font-size: 10px;
-  color: var(--text-dim);
+  font-size: 13px;
+  color: var(--text-note);
   margin-top: 4px;
 }
 
 /* Alert section */
 .alert-section {
-  background: var(--surface);
+  background: var(--warn-bg);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 16px 20px;
+  border-left: 4px solid var(--warn-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  padding: 20px;
   margin-top: 4px;
 }
 
@@ -399,18 +428,19 @@ body {
 
 .alert-icon {
   font-size: 14px;
+  color: var(--warn-text);
 }
 
 .alert-title {
-  font-size: 13px;
-  font-weight: 600;
-  color: var(--alert);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--warn-text);
   letter-spacing: 0.3px;
 }
 
 .alert-body {
-  font-size: 13px;
-  color: var(--text-muted);
+  font-size: 14px;
+  color: var(--warn-text);
   line-height: 1.6;
 }
 
@@ -419,18 +449,19 @@ body {
   align-items: flex-start;
   gap: 8px;
   padding: 6px 0;
+  overflow-wrap: anywhere;
 }
 
 .alert-item + .alert-item {
-  border-top: 1px solid var(--border);
+  border-top: 1px solid rgba(245, 158, 11, 0.3);
 }
 
 .alert-bullet {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background: var(--alert);
-  margin-top: 7px;
+  background: var(--warn-border);
+  margin-top: 9px;
   flex-shrink: 0;
 }
 
@@ -440,11 +471,13 @@ body {
   padding-top: 16px;
   border-top: 1px solid var(--border);
   display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-size: 11px;
-  color: var(--text-dim);
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text-note);
   font-family: 'IBM Plex Mono', monospace;
 }
 
@@ -455,14 +488,17 @@ body {
 
 /* Margin note */
 .margin-note {
-  font-size: 11px;
-  color: var(--text-dim);
-  padding: 8px 18px 12px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-note);
+  padding: 12px 0 0;
   border-top: 1px solid var(--border);
-  font-style: italic;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 700px) {
+  .dashboard { padding: 20px 16px 40px; }
   .grid { grid-template-columns: 1fr; }
   .rate-row, .fx-row { grid-template-columns: 1fr; }
   .rate-cell, .fx-cell { border-right: none; border-bottom: 1px solid var(--border); }
@@ -474,6 +510,17 @@ body {
   .inflation-row { grid-template-columns: 1fr; }
   .inflation-cell { border-right: none; border-bottom: 1px solid var(--border); }
   .inflation-cell:last-child { border-bottom: none; }
+  /* 大數字獨占一行，避免 375px 下擠出橫向捲軸 */
+  .indicator {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "label change" "value value";
+    row-gap: 2px;
+  }
+  .ind-label { grid-area: label; }
+  .ind-change { grid-area: change; }
+  .ind-value { grid-area: value; text-align: left; font-size: 28px; }
+  .ind-value.large { font-size: 28px; }
+  .gauge-labels { font-size: 11px; }
 }
 </style>
 
@@ -503,12 +550,12 @@ body {
         </div>
         <div class="indicator">
           <span class="ind-label">成交金額</span>
-          <span class="ind-value">8,667<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-value">8,667<span style="font-size:12px;color:var(--text-sub)"> 億</span></span>
           <span class="ind-change down">▼ −1,271</span>
         </div>
         <div class="indicator">
           <span class="ind-label">三大法人合計</span>
-          <span class="ind-value" style="color:var(--down)">−888.6<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-value" style="color:var(--down)">−888.6<span style="font-size:12px;color:var(--text-sub)"> 億</span></span>
           <span class="ind-change down">賣超</span>
         </div>
       </div>
@@ -573,7 +620,7 @@ body {
         </div>
         <div class="indicator">
           <span class="ind-label">融資餘額</span>
-          <span class="ind-value">6,406<span style="font-size:12px;color:var(--text-muted)"> 億</span></span>
+          <span class="ind-value">6,406<span style="font-size:12px;color:var(--text-sub)"> 億</span></span>
           <span class="ind-change down">▼ −49.76億</span>
         </div>
       </div>
@@ -672,11 +719,11 @@ body {
     <div class="alert-body">
       <div class="alert-item">
         <span class="alert-bullet"></span>
-        <span><strong style="color:var(--text)">融資維持率 −2.09pp</strong>（183.39% → 181.3%），融資餘額 −49.76 億 — 超過 1pp 門檻</span>
+        <span><strong style="color:var(--text-main)">融資維持率 −2.09pp</strong>（183.39% → 181.3%），融資餘額 −49.76 億 — 超過 1pp 門檻</span>
       </div>
       <div class="alert-item">
         <span class="alert-bullet"></span>
-        <span><strong style="color:var(--text)">WTI −3.66%</strong>（101.84 → 98.11）— 超過 2% 門檻；但來源頁面自身當日漲跌為 +0.43%（昨收 97.69），上份報告值與來源週五收盤落差大，請謹慎看待</span>
+        <span><strong style="color:var(--text-main)">WTI −3.66%</strong>（101.84 → 98.11）— 超過 2% 門檻；但來源頁面自身當日漲跌為 +0.43%（昨收 97.69），上份報告值與來源週五收盤落差大，請謹慎看待</span>
       </div>
       <div class="alert-item">
         <span class="alert-bullet"></span>
