@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>每日數據｜歷史與比較</title>
+<style>
+:root{--bg-page:#F5F7FA;--bg-card:#FFFFFF;--border:#E3E8EF;--text-main:#1F2937;--text-sub:#4B5563;--text-note:#6B7280;
+--accent:#2563EB;--accent-bg:#EFF4FF;--up:#D93025;--up-bg:#FDECEA;--down:#188038;--down-bg:#E6F4EA;--flat:#6B7280;
+--s1:#2563EB;--s2:#D97706;--grid:#EEF1F5;--font:"PingFang TC","Microsoft JhengHei",-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",Consolas,Menlo,monospace}
+*{box-sizing:border-box;margin:0}
+body{background:var(--bg-page);color:var(--text-main);font-family:var(--font);line-height:1.5;padding:20px 14px 48px}
+.wrap{max-width:1120px;margin:0 auto}
+header{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px}
+h1{font-size:24px;font-weight:700}h1 span{color:var(--accent)}
+a{color:var(--accent)}
+.sub{font-size:13px;color:var(--text-sub);margin-bottom:20px}
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.06);padding:18px;margin-bottom:16px;min-width:0}
+h2{font-size:16px;font-weight:700;border-left:4px solid var(--accent);padding-left:10px;margin-bottom:12px}
+.private h2{border-left-color:var(--s2)}
+.badge{font-size:11px;font-weight:700;color:#7A4B00;background:#FFF8E1;border:1px solid #F59E0B;border-radius:999px;padding:1px 8px;margin-left:8px;vertical-align:middle}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px;font-size:13px;color:var(--text-sub)}
+select,button{font:inherit;font-size:13px;color:var(--text-main);background:#fff;border:1px solid var(--border);border-radius:8px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.tblwrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:7px 8px;text-align:right;border-bottom:1px solid var(--border);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+th{font-weight:600;color:var(--text-sub);font-size:12px;background:#FAFBFC;position:sticky;top:0}
+td.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+tr.grp td{background:var(--accent-bg);color:var(--accent);font-weight:700;font-size:12px;text-align:left}
+.chg{display:inline-block;font-family:var(--mono);font-weight:600;font-size:12px;border-radius:999px;padding:1px 8px}
+.chg.up{color:var(--up);background:var(--up-bg)}.chg.down{color:var(--down);background:var(--down-bg)}.chg.flat{color:var(--flat)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:14px}
+.tile{border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.tile .l{font-size:12px;color:var(--text-sub)}.tile .v{font-family:var(--mono);font-size:26px;font-weight:700;font-variant-numeric:tabular-nums}
+.tile .d{font-size:12px;color:var(--text-note);margin-top:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:12px}
+.chart{border:1px solid var(--border);border-radius:10px;padding:10px 12px 6px;position:relative;min-width:0}
+.chart .t{font-size:13px;font-weight:600;display:flex;justify-content:space-between;gap:8px}
+.chart .t b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.chart svg{display:block;width:100%;height:auto;overflow:visible}
+.legend{display:flex;gap:14px;font-size:12px;color:var(--text-sub);margin-top:2px}
+.legend i{display:inline-block;width:14px;height:3px;border-radius:2px;margin-right:5px;vertical-align:middle}
+.tip{position:absolute;pointer-events:none;background:#1F2937;color:#fff;font-size:12px;border-radius:6px;padding:5px 8px;white-space:nowrap;z-index:5;display:none;font-family:var(--mono)}
+.note{font-size:12px;color:var(--text-note);margin-top:10px;line-height:1.6}
+.empty{font-size:13px;color:var(--text-note);padding:8px 0}
+footer{font-size:12px;color:var(--text-note);text-align:center;margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><h1>每日數據<span>｜</span>歷史與比較</h1><a href="macro-dashboard.html">← 回今日儀表板</a></header>
+<p class="sub" id="sub">載入中…</p>
+
+<div class="card private" id="privCard" hidden>
+  <h2>方舟風控水位與我的部位<span class="badge">私人・僅存於本機</span></h2>
+  <div class="tiles" id="tiles"></div>
+  <div class="grid" id="privCharts"></div>
+  <div class="tblwrap" style="margin-top:14px;max-height:460px;overflow-y:auto"><table id="privTable"></table></div>
+  <p class="note">現金水位＝100% − 個人水位（個人水位＝市值 ÷（市值＋閒錢），不含外幣）。「大盤／方舟」欄只標示加權指數與方舟風控水位各自相對上一筆紀錄的方向，不做任何判讀；加權指數顯示「—」代表儀表板沒有存到那一天的收盤。</p>
+</div>
+
+<div class="card">
+  <h2>兩日比較</h2>
+  <div class="controls">
+    <label>看 <select id="selA"></select></label>
+    <label>對比 <select id="selB"></select></label>
+    <span id="quick"></span>
+  </div>
+  <div class="tblwrap"><table id="cmp"></table></div>
+  <p class="note">變動＝「看」的那天減「對比」的那天。紅色▲為上升、綠色▼為下降（台股慣例），只代表數字方向，不代表好壞。</p>
+</div>
+
+<div class="card">
+  <h2>走勢</h2>
+  <div class="controls" id="range"></div>
+  <div class="grid" id="charts"></div>
+</div>
+
+<div class="card">
+  <h2>每日紀錄全表</h2>
+  <div class="controls"><button id="csv">下載 CSV（可用 Excel 開啟）</button></div>
+  <div class="tblwrap" style="max-height:420px;overflow-y:auto"><table id="full"></table></div>
+  <p class="note">每列是當晚儀表板存下來的數字。非交易日（週末、假日）的台股欄位會沿用前一個交易日；各指標實際資料日期以當天儀表板的註記為準。</p>
+</div>
+<footer>資料來源：證交所、M平方、玩股網、美國財政部、MarketWatch、鉅亨網｜僅供參考，不構成任何投資建議</footer>
+</div>
+
+<script src="private-data.js" onerror="void 0"></script>
+<script>
+const F=[
+ ['台股市場','taiex','加權指數',2,''],['台股市場','turnover','成交金額',0,'億'],['台股市場','inst_total','三大法人合計',1,'億'],
+ ['台股市場','foreign','外資',1,'億'],['台股市場','trust','投信',1,'億'],['台股市場','dealer','自營商',1,'億'],
+ ['風險情緒','vix','VIX 恐慌指數',2,''],['風險情緒','cnn','CNN 恐貪指數',2,''],
+ ['融資融券','margin_ratio','融資維持率',2,'%'],['融資融券','margin_ratio_ex_etf','融資維持率（扣除 ETF）',2,'%'],['融資融券','margin_balance','融資餘額',2,'億'],
+ ['油價','brent','布蘭特原油',2,''],['油價','wti','WTI 原油',2,''],
+ ['利率與通膨','y2','2 年期殖利率',2,'%'],['利率與通膨','y10','10 年期殖利率',2,'%'],['利率與通膨','y30','30 年期殖利率',2,'%'],
+ ['利率與通膨','be10','10 年通膨預期',2,'%'],['利率與通膨','be30','30 年通膨預期',2,'%'],
+ ['匯率','dxy','美元指數 DXY',2,''],['匯率','usdjpy','美元／日圓',2,''],['匯率','usdtwd','美元／台幣',3,'']
+].map(a=>({grp:a[0],k:a[1],name:a[2],dp:a[3],unit:a[4]}));
+const FLOW=new Set(['inst_total','foreign','trust','dealer']); // 本身就是每日買賣超，不算百分比變動
+const $=id=>document.getElementById(id);
+const fmt=(v,dp)=>v==null||isNaN(v)?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp});
+const sgn=(v,dp)=>(v>0?'+':v<0?'−':'')+fmt(Math.abs(v),dp);
+const md=d=>d.slice(5).replace('-','/');
+function chg(d,dp,suf){ if(d==null||isNaN(d))return '<span class="chg flat">—</span>';
+  const c=Math.abs(d)<1e-9?'flat':d>0?'up':'down',a=c=='up'?'▲ ':c=='down'?'▼ ':'';
+  return `<span class="chg ${c}">${a}${sgn(d,dp)}${suf||''}</span>`;}
+let H=[],P=[],range='all';
+
+async function load(){
+  if(window.HISTORY_INLINE)return window.HISTORY_INLINE;
+  const urls=['data/history.json','https://liaopeiting.github.io/patty-daily-dashboard/data/history.json'];
+  for(const u of urls){try{const r=await fetch(u,{cache:'no-store'});if(r.ok)return await r.json();}catch(e){}}
+  throw new Error('讀不到歷史資料檔 data/history.json');
+}
+function byDate(arr,d){return arr.find(r=>r.date===d);}
+
+/* ---------- 兩日比較 ---------- */
+function renderCmp(){
+  const a=byDate(H,$('selA').value),b=byDate(H,$('selB').value);
+  let h=`<tr><th>指標</th><th>${md(b.date)}（對比）</th><th>${md(a.date)}（看）</th><th>變動</th><th>變動 %</th></tr>`,g='';
+  for(const f of F){ if(f.grp!==g){g=f.grp;h+=`<tr class="grp"><td colspan="5">${g}</td></tr>`;}
+    const x=a[f.k],y=b[f.k],d=(x==null||y==null)?null:x-y;
+    const pct=(d==null||FLOW.has(f.k)||f.unit==='%'||!y)?null:d/Math.abs(y)*100;
+    h+=`<tr><td>${f.name}${f.unit&&f.unit!=='%'?`（${f.unit}）`:''}</td><td class="num">${fmt(y,f.dp)}${f.unit==='%'&&y!=null?'%':''}</td><td class="num">${fmt(x,f.dp)}${f.unit==='%'&&x!=null?'%':''}</td>
+    <td>${chg(d,f.dp,f.unit==='%'?'pp':'')}</td><td>${pct==null?'<span class="chg flat">—</span>':chg(pct,2,'%')}</td></tr>`; }
+  $('cmp').innerHTML=h;
+}
+function initCmp(){
+  const opts=H.slice().reverse().map(r=>`<option value="${r.date}">${r.date}</option>`).join('');
+  $('selA').innerHTML=opts;$('selB').innerHTML=opts;
+  const last=H.length-1;$('selA').value=H[last].date;$('selB').value=H[Math.max(0,last-1)].date;
+  const q=[['前一筆',1],['約一週前',7],['約一個月前',30]];
+  $('quick').innerHTML=q.map((x,i)=>`<button data-i="${i}">${x[0]}</button>`).join(' ');
+  $('quick').onclick=e=>{const i=e.target.dataset.i;if(i==null)return;const A=$('selA').value,ai=H.findIndex(r=>r.date===A);let bi;
+    if(i==0)bi=Math.max(0,ai-1);else{const t=new Date(A);t.setDate(t.getDate()-q[i][1]);const ts=t.toISOString().slice(0,10);
+      bi=0;for(let j=0;j<ai;j++)if(H[j].date<=ts)bi=j;}
+    $('selB').value=H[bi].date;renderCmp();};
+  $('selA').onchange=$('selB').onchange=renderCmp;renderCmp();
+}
+
+/* ---------- 折線圖（單一 Y 軸；滑鼠移上去看數值） ---------- */
+function lineChart(host,title,rows,series,dp,unit){
+  const pts=rows.filter(r=>series.some(s=>r[s.k]!=null));
+  const box=document.createElement('div');box.className='chart';host.appendChild(box);
+  if(pts.length<2){box.innerHTML=`<div class="t"><span>${title}</span></div><div class="empty">紀錄不足兩筆，累積後就會出現走勢。</div>`;return;}
+  const W=340,Hh=150,L=6,R=58,T=10,B=20;
+  const t=pts.map(r=>+new Date(r.date)),t0=t[0],t1=t[t.length-1];
+  let lo=Infinity,hi=-Infinity;pts.forEach(r=>series.forEach(s=>{const v=r[s.k];if(v!=null){lo=Math.min(lo,v);hi=Math.max(hi,v);}}));
+  if(hi===lo){hi+=1;lo-=1;}const pad=(hi-lo)*.08;lo-=pad;hi+=pad;
+  const X=v=>L+(v-t0)/(t1-t0||1)*(W-L-R),Y=v=>T+(hi-v)/(hi-lo)*(Hh-T-B);
+  let svg=`<svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${title} 走勢">`;
+  [hi-pad,lo+pad].forEach(v=>{svg+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/>`;});
+  if(lo<0&&hi>0)svg+=`<line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="#9CA3AF" stroke-dasharray="3 3"/>`;
+  const ends=[];
+  series.forEach(s=>{const p=pts.map((r,i)=>r[s.k]==null?null:[X(t[i]),Y(r[s.k]),r[s.k]]).filter(Boolean);if(!p.length)return;
+    svg+=`<polyline fill="none" stroke="${s.c}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round" points="${p.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}"/>`;
+    const e=p[p.length-1];svg+=`<circle cx="${e[0]}" cy="${e[1]}" r="4" fill="${s.c}" stroke="#fff" stroke-width="2"/>`;ends.push({y:e[1],v:e[2],s});});
+  ends.sort((a,b)=>a.y-b.y);for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<13)ends[i].y=ends[i-1].y+13;
+  ends.forEach(e=>{svg+=`<text x="${W-R+8}" y="${e.y+4}" font-size="11" fill="var(--text-main)" font-family="var(--mono)">${fmt(e.v,dp)}${unit}</text>`;});
+  svg+=`<text x="${L}" y="${Hh-4}" font-size="10" fill="var(--text-note)">${md(pts[0].date)}</text><text x="${W-R}" y="${Hh-4}" font-size="10" fill="var(--text-note)" text-anchor="end">${md(pts[pts.length-1].date)}</text>`;
+  svg+=`<line class="x" y1="${T}" y2="${Hh-B}" stroke="#9CA3AF" stroke-width="1" visibility="hidden"/><rect x="0" y="0" width="${W}" height="${Hh}" fill="transparent"/></svg>`;
+  const lastV=series.length==1?`<b>${fmt(pts[pts.length-1][series[0].k],dp)}${unit}</b>`:'';
+  box.innerHTML=`<div class="t"><span>${title}</span>${lastV}</div>`+(series.length>1?`<div class="legend">${series.map(s=>`<span><i style="background:${s.c}"></i>${s.name}</span>`).join('')}</div>`:'')+svg+`<div class="tip"></div>`;
+  const el=box.querySelector('svg'),tip=box.querySelector('.tip'),xl=box.querySelector('.x');
+  const move=ev=>{const r=el.getBoundingClientRect(),cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left,vx=cx/r.width*W;
+    let bi=0,bd=1e9;t.forEach((v,i)=>{const d=Math.abs(X(v)-vx);if(d<bd){bd=d;bi=i;}});
+    const px=X(t[bi]);xl.setAttribute('x1',px);xl.setAttribute('x2',px);xl.setAttribute('visibility','visible');
+    tip.innerHTML=pts[bi].date+'<br>'+series.map(s=>(series.length>1?s.name+' ':'')+fmt(pts[bi][s.k],dp)+(pts[bi][s.k]==null?'':unit)).join('<br>');
+    tip.style.display='block';const tx=px/W*r.width;tip.style.left=Math.min(Math.max(0,tx-50),r.width-110)+'px';tip.style.top=(el.offsetTop-6)+'px';};
+  el.addEventListener('mousemove',move);el.addEventListener('touchstart',move,{passive:true});el.addEventListener('touchmove',move,{passive:true});
+  el.addEventListener('mouseleave',()=>{tip.style.display='none';xl.setAttribute('visibility','hidden');});
+}
+function sliceRange(arr){ if(range==='all'||!arr.length)return arr;const t=new Date(arr[arr.length-1].date);t.setDate(t.getDate()-range);
+  const s=t.toISOString().slice(0,10);return arr.filter(r=>r.date>=s);}
+function renderCharts(){
+  $('charts').innerHTML='';const rows=sliceRange(H);
+  F.forEach(f=>lineChart($('charts'),f.name+(f.unit&&f.unit!=='%'?`（${f.unit}）`:''),rows,[{k:f.k,c:'var(--s1)',name:f.name}],f.dp,f.unit==='%'?'%':''));
+  renderPrivCharts();
+}
+function initRange(){
+  const r=[['全部','all'],['近 30 天',30],['近 14 天',14]];
+  $('range').innerHTML='區間 '+r.map(x=>`<button data-r="${x[1]}" class="${x[1]==range?'on':''}">${x[0]}</button>`).join(' ');
+  $('range').onclick=e=>{const v=e.target.dataset.r;if(!v)return;range=v==='all'?'all':+v;initRange();renderCharts();};
+}
+
+/* ---------- 全表 / CSV ---------- */
+function renderFull(){
+  let h='<tr><th>日期</th>'+F.map(f=>`<th>${f.name}</th>`).join('')+'</tr>';
+  H.slice().reverse().forEach(r=>{h+=`<tr><td>${r.date}</td>`+F.map(f=>`<td class="num">${fmt(r[f.k],f.dp)}</td>`).join('')+'</tr>';});
+  $('full').innerHTML=h;
+  $('csv').onclick=()=>{const rows=[['日期',...F.map(f=>f.name)],...H.map(r=>[r.date,...F.map(f=>r[f.k]??'')])];
+    const blob=new Blob(['﻿'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'});const a=document.createElement('a');
+    a.href=URL.createObjectURL(blob);a.download='每日數據歷史.csv';a.click();};
+}
+
+/* ---------- 私人區塊（只有旁邊放了 private-data.js 才會出現） ---------- */
+function twOn(d){return H.find(r=>r.tw_date===d)||H.find(r=>!r.tw_date&&r.date===d)||{};}
+function renderPrivCharts(){
+  if(!P.length)return;const host=$('privCharts');host.innerHTML='';
+  const m=sliceRange(P.map(p=>Object.assign({taiex:twOn(p.date).taiex,cashpct:p.hold==null?null:100-p.hold},p)));
+  lineChart(host,'方舟風控水位 vs 個人水位',m,[{k:'ark',c:'var(--s1)',name:'方舟風控水位'},{k:'hold',c:'var(--s2)',name:'個人水位'}],1,'%');
+  lineChart(host,'總損益（元）',m,[{k:'pnl',c:'var(--s2)',name:'總損益'}],0,'');
+  lineChart(host,'報酬率',m,[{k:'ret',c:'var(--s2)',name:'報酬率'}],2,'%');
+  lineChart(host,'閒錢（元）',m,[{k:'cash',c:'var(--s2)',name:'閒錢'}],0,'');
+  lineChart(host,'總資產（元）',m,[{k:'total',c:'var(--s2)',name:'總資產'}],0,'');
+  lineChart(host,'加權指數（對照用）',m,[{k:'taiex',c:'var(--s1)',name:'加權指數'}],2,'');
+}
+function renderPriv(){
+  P=(window.PRIVATE_DATA||[]).filter(r=>r&&r.date).sort((a,b)=>a.date<b.date?-1:1);
+  if(!window.PRIVATE_DATA)return;$('privCard').hidden=false;
+  if(!P.length){$('tiles').innerHTML='<div class="empty">還沒有紀錄。新增第一筆後這裡就會出現。</div>';return;}
+  P.forEach(r=>{r.cashpct=r.hold==null?null:100-r.hold;});
+  const a=P[P.length-1],b=P[P.length-2]||{};
+  const T=[['方舟風控水位','ark',1,'%'],['個人水位','hold',2,'%'],['現金水位','cashpct',2,'%'],['總損益','pnl',0,''],['報酬率','ret',2,'%'],['閒錢','cash',0,''],['總資產','total',0,'']];
+  $('tiles').innerHTML=T.map(x=>{const v=a[x[1]],d=(v==null||b[x[1]]==null)?null:v-b[x[1]];
+    return `<div class="tile"><div class="l">${x[0]}｜${md(a.date)}</div><div class="v">${x[1]=='pnl'&&v!=null?sgn(v,0):fmt(v,x[2])}${v==null?'':x[3]}</div>
+    <div class="d">${b.date?`較 ${md(b.date)} `+chg(d,x[2],x[3]=='%'?'pp':''):'尚無前一筆可比較'}</div></div>`;}).join('')+
+    (a.ark!=null&&a.hold!=null?`<div class="tile"><div class="l">個人水位 − 方舟風控水位</div><div class="v">${sgn(a.hold-a.ark,1)}pp</div><div class="d">負數＝個人水位比方舟低</div></div>`:'');
+  const dir=d=>d==null?'—':Math.abs(d)<1e-9?'持平':d>0?'▲':'▼',pc=(v,dp)=>v==null?'—':fmt(v,dp)+'%';
+  let h='<tr><th>日期</th><th>方舟風控水位</th><th>個人水位</th><th>現金水位</th><th>總損益</th><th>損益變動</th><th>報酬率</th><th>市值</th><th>成本</th><th>閒錢</th><th>外幣</th><th>總資產</th><th>加權指數</th><th>大盤／方舟</th></tr>';
+  for(let i=P.length-1;i>=0;i--){const r=P[i],p=P[i-1]||{},m=twOn(r.date),pm=p.date?twOn(p.date):{};
+    const dT=(m.taiex==null||pm.taiex==null)?null:m.taiex-pm.taiex,dA=(r.ark==null||p.ark==null)?null:r.ark-p.ark;
+    h+=`<tr><td>${r.date}</td><td class="num">${pc(r.ark,1)}</td><td class="num">${pc(r.hold,2)}</td><td class="num">${pc(r.cashpct,2)}</td>
+    <td class="num">${r.pnl==null?'—':sgn(r.pnl,0)}</td><td>${chg(r.pnl==null||p.pnl==null?null:r.pnl-p.pnl,0)}</td><td class="num">${pc(r.ret,2)}</td>`+
+    ['mv','cost','cash','fx','total'].map(k=>`<td class="num">${fmt(r[k],0)}</td>`).join('')+`<td class="num">${fmt(m.taiex,2)}</td><td>大盤 ${dir(dT)}／方舟 ${dir(dA)}</td></tr>`;}
+  $('privTable').innerHTML=h;
+}
+
+load().then(d=>{H=d.filter(r=>r.date).sort((a,b)=>a.date<b.date?-1:1);
+  $('sub').textContent=`已保存 ${H.length} 天的紀錄（${H[0].date} ～ ${H[H.length-1].date}），每晚排程更新後自動多一筆。`;
+  renderPriv();initCmp();initRange();renderCharts();renderFull();
+}).catch(e=>{$('sub').textContent='⚠ '+e.message+'（請確認網路連線，或資料檔是否已上傳）';});
+</script>
+</body>
+</html>

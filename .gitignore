@@ -1,0 +1,7 @@
+# 個人資料永遠不上傳（方舟風控水位、個人水位、損益、Excel）
+private-data.js
+private/
+私人*
+*.xlsx
+*.xls
+*.csv
