@@ -5,3 +5,6 @@ private/
 *.xlsx
 *.xls
 *.csv
+
+# 例外：公開的市場數據表格（給 Google 試算表讀取），只含市場數據
+!data/history.csv
