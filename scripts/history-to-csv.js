@@ -36,6 +36,7 @@ const COLS = [
   ['dxy', '美元指數'],
   ['usdjpy', '美元日圓'],
   ['usdtwd', '美元台幣'],
+  ['fut_foreign_net_oi', '外資台指期淨未平倉(口)'],
 ];
 
 const rows = JSON.parse(fs.readFileSync(SRC, 'utf8'));

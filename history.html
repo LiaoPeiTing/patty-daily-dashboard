@@ -94,6 +94,7 @@ footer{font-size:12px;color:var(--text-note);text-align:center;margin-top:24px}
 const F=[
  ['台股市場','taiex','加權指數',2,''],['台股市場','turnover','成交金額',0,'億'],['台股市場','inst_total','三大法人合計',1,'億'],
  ['台股市場','foreign','外資',1,'億'],['台股市場','trust','投信',1,'億'],['台股市場','dealer','自營商',1,'億'],
+ ['台股市場','fut_foreign_net_oi','外資台指期淨未平倉',0,'口'],
  ['風險情緒','vix','VIX 恐慌指數',2,''],['風險情緒','cnn','CNN 恐貪指數',2,''],
  ['融資融券','margin_ratio','融資維持率',2,'%'],['融資融券','margin_ratio_ex_etf','融資維持率（扣除 ETF）',2,'%'],['融資融券','margin_balance','融資餘額',2,'億'],
  ['油價','brent','布蘭特原油',2,''],['油價','wti','WTI 原油',2,''],
@@ -101,7 +102,7 @@ const F=[
  ['利率與通膨','be10','10 年通膨預期',2,'%'],['利率與通膨','be30','30 年通膨預期',2,'%'],
  ['匯率','dxy','美元指數 DXY',2,''],['匯率','usdjpy','美元／日圓',2,''],['匯率','usdtwd','美元／台幣',3,'']
 ].map(a=>({grp:a[0],k:a[1],name:a[2],dp:a[3],unit:a[4]}));
-const FLOW=new Set(['inst_total','foreign','trust','dealer']); // 本身就是每日買賣超，不算百分比變動
+const FLOW=new Set(['inst_total','foreign','trust','dealer','fut_foreign_net_oi']); // 本身就是每日買賣超／淨未平倉會正負翻轉，不算百分比變動
 const $=id=>document.getElementById(id);
 const fmt=(v,dp)=>v==null||isNaN(v)?'—':Number(v).toLocaleString('en-US',{minimumFractionDigits:dp,maximumFractionDigits:dp});
 const sgn=(v,dp)=>(v>0?'+':v<0?'−':'')+fmt(Math.abs(v),dp);
